@@ -4,16 +4,25 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "vvvip": "cd scripts && nodemon vvvip.js"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.1",
     "element-plus": "^2.4.2"
   },
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.7",
     "@nuxt/devtools": "latest",
+    "@nuxt/image": "^1.1.0",
+    "fs-extra": "^11.1.1",
     "nuxt": "^3.8.2",
     "sass": "^1.69.5",
+    "stylelint": "^15.11.0",
+    "stylelint-config-html": "^1.1.0",
+    "stylelint-config-standard-scss": "^11.1.0",
+    "stylelint-order": "^6.0.3",
+    "stylelint-stylistic": "^0.4.3",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
   }

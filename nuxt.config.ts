@@ -1,4 +1,8 @@
 export default defineNuxtConfig({
+    css: [
+        "~/assets/scss/index.scss"
+    ],
+    ssr: false,
     devServer: {
         port: 615
     },
@@ -6,6 +10,8 @@ export default defineNuxtConfig({
         enabled: true
     },
     modules: [
-        "@element-plus/nuxt"
+        "@element-plus/nuxt",
+        "@nuxt/image",
+        "@pinia/nuxt"
     ]
 });
