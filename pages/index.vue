@@ -18,37 +18,54 @@
 
 <template>
     <div class="mae-index">
-        <div class="ship-fleet">
-            <ShipItem
-                v-for="(ship, i) in fleetStore.main"
-                fleet="main"
-                :order="i"
-                :ship="ship"
-            />
+        <div class="ship-fleet-wrapper">
+            <div class="ship-fleet">
+                <ShipItem
+                    v-for="(ship, i) in fleetStore.main"
+                    fleet="main"
+                    :order="i"
+                    :ship="ship"
+                />
+            </div>
+            <div class="ship-fleet">
+                <ShipItem
+                    v-for="(ship, i) in fleetStore.vanguard"
+                    fleet="vanguard"
+                    :order="i"
+                    :ship="ship"
+                />
+            </div>
         </div>
-        <div class="ship-fleet">
-            <ShipItem
-                v-for="(ship, i) in fleetStore.vanguard"
-                fleet="vanguard"
-                :order="i"
-                :ship="ship"
-            />
+        <div class="ship-details">
+            <ShipStatus />
+            <ShipStrengthen />
         </div>
-        <ShipStatus />
     </div>
 </template>
 
 <style lang="scss" scoped>
     .mae-index {
         display: flex;
-        flex-direction: column;
-        gap: 1em;
-        width: 560px;
+        justify-content: center;
+        gap: 2em;
         margin: 2em auto;
+    }
+
+    .ship-fleet-wrapper {
+        display: grid;
+        gap: 2em;
     }
 
     .ship-fleet {
         display: grid;
-        gap: 8px;
+        gap: 0.5em;
+        width: 560px;
+    }
+
+    .ship-details {
+        display: flex;
+        flex-direction: column;
+        gap: 2em;
+        width: 480px;
     }
 </style>

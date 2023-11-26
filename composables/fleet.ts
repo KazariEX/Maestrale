@@ -14,7 +14,7 @@ export const useFleetStore = defineStore("fleet", () => {
     ]);
 
     //当前选中的舰船
-    const curShip = ref<typeof Ship | null>(null);
+    const curShip = ref();
 
     return {
         main,

@@ -79,24 +79,25 @@
                 </el-form-item>
             </el-form>
             <div class="selector-list">
-                <template v-for="(item, id) in statis">
-                    <nuxt-img
-                        v-if="
-                            shipSelectorStore.curTypes.includes(item.type) &&
-                            (filter.rarity === 0 || item.rarity === filter.rarity) &&
-                            (filter.type === 0 || item.type === filter.type) &&
-                            (filter.nationality === 0 || item.nationality === filter.nationality)
-                        "
-                        class="selector-item"
-                        loading="lazy"
-                        :key="id"
-                        :style="{ backgroundImage: `url(/image/artresource/atlas/weaponframes/bg${item.rarity - 1}.png)` }"
-                        :src="`/image/artresource/atlas/squareicon/${
-                            ship_skin_template[id + `0`].painting
-                        }.png`"
-                        :title="item.name"
-                        @click="selectShip(id)"
-                    />
+                <template v-for="(item, id) in statis" :key="id">
+                    <div v-show="
+                        shipSelectorStore.curTypes.includes(item.type) &&
+                        (filter.rarity === 0 || item.rarity === filter.rarity) &&
+                        (filter.type === 0 || item.type === filter.type) &&
+                        (filter.nationality === 0 || item.nationality === filter.nationality)
+                    " class="selector-item">
+                        <nuxt-img
+                            class="icon"
+                            loading="lazy"
+                            :style="{ backgroundImage: `url(/image/artresource/atlas/weaponframes/bg${item.rarity - 1}.png)` }"
+                            :src="`/image/artresource/atlas/squareicon/${
+                                ship_skin_template[id + `0`].painting
+                            }.png`"
+                            :title="item.name"
+                            @click="selectShip(id)"
+                        />
+                        <span class="name">{{ item.name }}</span>
+                    </div>
                 </template>
             </div>
         </div>
@@ -133,8 +134,22 @@
     }
 
     .selector-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
         width: 64px;
-        aspect-ratio: 1;
         cursor: pointer;
+
+        .icon {
+            aspect-ratio: 1;
+        }
+
+        .name {
+            overflow: hidden;
+            font-size: 12px;
+            text-align: center;
+            text-overflow: ellipsis;
+            text-wrap: nowrap;
+        }
     }
 </style>

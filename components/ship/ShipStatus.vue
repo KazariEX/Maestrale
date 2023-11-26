@@ -1,5 +1,5 @@
 <script setup>
-    import armorMap from "~/data/constraint/armor";
+    import armorTable from "~/data/constraint/armor";
 
     const fleetStore = useFleetStore();
     const ship = storeToRefs(fleetStore).curShip;
@@ -15,7 +15,7 @@
             </div>
             <div>
                 <i><nuxt-img src="/image/prefab/variantplatform/armor.png"/></i>
-                <span class="title">{{ armorMap[ship?.armor] }}</span>
+                <span class="title">{{ armorTable[ship?.armor] }}</span>
             </div>
             <div>
                 <i><nuxt-img src="/image/prefab/variantplatform/reload.png"/></i>
@@ -63,7 +63,6 @@
                     <span class="title">弹药量</span>
                     <span class="content">{{ Math.floor(ship?.ammo) }}</span>
                 </div>
-
             </template>
             <template v-else>
                 <div>

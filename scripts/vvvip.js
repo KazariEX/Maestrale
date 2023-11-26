@@ -2,6 +2,15 @@ import fs from "fs-extra";
 import path from "path";
 
 pick({
+    filename: "ship_data_blueprint.json",
+    folder: "ShareCfg",
+    props: [
+        "fate_strengthen",
+        "strengthen_effect"
+    ]
+});
+
+pick({
     filename: "ship_data_strengthen.json",
     folder: "ShareCfg",
     props: [
@@ -17,6 +26,17 @@ pick({
         "painting"
     ]
 });
+
+pick({
+    filename: "ship_strengthen_blueprint.json",
+    folder: "ShareCfg",
+    props: [
+        "effect",
+        "effect_attr",
+        "lv",
+        "need_exp"
+    ]
+})
 
 pick({
     filename: "ship_data_statistics.json",
