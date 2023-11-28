@@ -22,7 +22,7 @@
     async function openSelector() {
         const id = await equipSelectorStore.open(props.ship, props.slot);
 
-        if (id !== -1) {
+        if (id !== 0) {
             props.ship.equips[props.slot] = createEquip(id);
         }
     }

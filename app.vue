@@ -6,6 +6,6 @@
 
 <template>
     <nuxt-layout>
-        <nuxt-page />
+        <nuxt-page keepalive/>
     </nuxt-layout>
 </template>

@@ -3,7 +3,7 @@
 
     fleetStore.main = [
         null,
-        createShip(80501),
+        createShip(60501),
         null
     ];
 

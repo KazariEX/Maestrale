@@ -340,6 +340,41 @@ export class Ship {
 
         return Math.floor((([8, 17, 22].includes(this.type.value) ? 0 : 1) + this.template.oil_at_end * levelRate));
     });
+
+    //战力
+    power = computed(() => {
+        const attrs = createAttributes();
+        const technologyStore = useTechnologyStore();
+
+        //合计属性
+        for (const attr in attrs) {
+            attrs[attr] =
+                this[attr].value +
+                this.equipAttrs.value[attr] +
+                technologyStore.get(this.type.value, attr);
+        }
+
+        //装备品质战力
+        const equipPower = this.equips.value.reduce((res, equip) => {
+            if (equip) {
+                res += equip.power as any;
+            }
+            return res;
+        }, 0);
+
+        return (
+            attrs.durability * 0.2 +
+            attrs.cannon +
+            attrs.torpedo +
+            attrs.antiaircraft +
+            attrs.air +
+            attrs.reload +
+            attrs.hit * 2 +
+            attrs.dodge * 2 +
+            attrs.antisub +
+            equipPower
+        );
+    });
 }
 
 export function createShip(id: number, {

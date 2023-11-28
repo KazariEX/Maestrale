@@ -35,7 +35,7 @@
 
     //关闭抽屉时
     function onClose() {
-        equipSelectorStore.resolve(-1);
+        equipSelectorStore.resolve(0);
     }
 
     //选择装备，返回ID

@@ -35,8 +35,8 @@
     async function openSelector() {
         const id = await shipSelectorStore.open(fleetTable[props.fleet]);
 
-        if (id !== -1) {
-            fleetStore[props.fleet][props.order] = new Ship(id);
+        if (id !== 0) {
+            fleetStore[props.fleet][props.order] = createShip(id);
             switchCurShip();
         }
     }
@@ -60,7 +60,10 @@
         </div>
         <template v-if="ship">
             <section class="ship-section">
-                <p><el-text type="info">名称：</el-text><el-text>{{ ship.name }}</el-text></p>
+                <div class="ship-info">
+                    <p><el-text type="info">名称：</el-text><el-text>{{ ship.name }}</el-text></p>
+                    <p><el-text>{{ Math.floor(ship.power) }}</el-text> <el-text type="info">战力</el-text></p>
+                </div>
                 <div class="ship-props">
                     <el-input-number
                         class="ship-level"
@@ -130,10 +133,12 @@
         display: grid;
         grid-template-rows: 1fr 1fr;
         height: 100%;
+    }
 
-        > p {
-            line-height: 28px;
-        }
+    .ship-info {
+        display: flex;
+        justify-content: space-between;
+        line-height: 28px;
     }
 
     .ship-props {

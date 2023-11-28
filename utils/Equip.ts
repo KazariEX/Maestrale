@@ -64,6 +64,22 @@ export class Equip {
         }
         return res;
     });
+
+    //战力模板
+    private static powerTemplate = {
+        1: [30, 5],
+        2: [50, 8],
+        3: [80, 10],
+        4: [120, 12],
+        5: [180, 15],
+        6: [300, 20]
+    };
+
+    //品质战力
+    power = computed(() => {
+        const [base, strengthen] = Equip.powerTemplate[this.rarity];
+        return base + strengthen * (1 + this.level.value);
+    });
 }
 
 export function createEquip(id: number) {

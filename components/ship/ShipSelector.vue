@@ -35,7 +35,7 @@
 
     //关闭抽屉时
     function onClose() {
-        shipSelectorStore.resolve(-1);
+        shipSelectorStore.resolve(0);
     }
 
     //选择舰娘，返回ID
