@@ -1,4 +1,11 @@
 export default defineNuxtConfig({
+    app: {
+        head: {
+            link: [
+                { rel: "icon", href: "/image/favicon.ico" }
+            ]
+        }
+    },
     css: [
         "~/assets/scss/index.scss"
     ],
