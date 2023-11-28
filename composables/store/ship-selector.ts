@@ -1,9 +1,9 @@
 export const useShipSelectorStore = defineStore("ship-selector", () => {
     const openState = ref(false);
-    const curTypes = ref([0]);
+    const curTypes = ref([]);
     const resolve = ref();
 
-    function open(types: number[]) {
+    function open(types = []) {
         return new Promise((res, rej) => {
             openState.value = true;
             curTypes.value = types;

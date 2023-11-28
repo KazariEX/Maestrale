@@ -1,4 +1,4 @@
-export const typeTable = {
+export default {
     1: "驱逐",
     2: "轻巡",
     3: "重巡",
@@ -19,5 +19,3 @@ export const typeTable = {
     23: "风帆V",
     24: "风帆M"
 };
-
-export const typeOptions = tableToOptions(typeTable);

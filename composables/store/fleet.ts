@@ -1,3 +1,5 @@
+import { Ship } from "~/utils/Ship";
+
 export const useFleetStore = defineStore("fleet", () => {
     //主力舰队
     const main = ref([
@@ -14,7 +16,7 @@ export const useFleetStore = defineStore("fleet", () => {
     ]);
 
     //当前选中的舰船
-    const curShip = ref();
+    const curShip: Ref<Ship> = ref();
 
     return {
         main,

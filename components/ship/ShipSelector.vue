@@ -1,18 +1,24 @@
 <script setup>
-    import { nationalityOptions } from "~/data/constraint/nationality";
-    import { rarityOptions } from "~/data/constraint/rarity";
-    import { typeOptions } from "~/data/constraint/type";
+    import nationalityTable from "~/data/constraint/nationality";
+    import rarityTable from "~/data/constraint/rarity";
+    import shipTypeTable from "~/data/constraint/ship-type";
     import ship_data_statistics from "~/data/ShareCfg(VVVIP)/ship_data_statistics.json";
     import ship_skin_template from "~/data/ShareCfg(VVVIP)/ship_skin_template.json";
 
     const shipSelectorStore = useShipSelectorStore();
 
+    const nationalityOptions = useConstraintOptions(nationalityTable, { total: true });
+    const rarityOptions = useConstraintOptions(rarityTable, { total: true });
+    const shipTypeOptions = useConstraintOptions(shipTypeTable, { total: true });
+
+    //筛选ID
     const ids = new Set(
         Object.keys(ship_data_statistics)
         .map((id) => id.slice(0, id.length - 1))
         .filter((id) => !id.startsWith("900"))
     );
 
+    //获取数据体
     const statis = {};
     for (const id of ids) {
         const obj = ship_data_statistics[id + "1"];
@@ -45,12 +51,12 @@
         title="选择舰船"
         size="520px"
         @close="onClose"
-        ><div class="ship-selector">
+        ><div class="mae-selector">
             <el-form class="selector-filter" label-position="top">
                 <el-form-item label="稀有度">
                     <el-select v-model="filter.rarity">
                         <el-option
-                            v-for="item in [{ value: 0, label: `全部` }, ...rarityOptions]"
+                            v-for="item in rarityOptions"
                             :key="item.value"
                             :value="item.value"
                             :label="item.label"
@@ -60,7 +66,7 @@
                 <el-form-item label="舰种">
                     <el-select v-model="filter.type">
                         <el-option
-                            v-for="item in [{ value: 0, label: `全部` }, ...typeOptions]"
+                            v-for="item in shipTypeOptions"
                             :key="item.value"
                             :value="item.value"
                             :label="item.label"
@@ -70,7 +76,7 @@
                 <el-form-item label="阵营">
                     <el-select v-model="filter.nationality">
                         <el-option
-                            v-for="item in [{ value: 0, label: `全部` }, ...nationalityOptions]"
+                            v-for="item in nationalityOptions"
                             :key="item.value"
                             :value="item.value"
                             :label="item.label"
@@ -86,16 +92,17 @@
                         (filter.type === 0 || item.type === filter.type) &&
                         (filter.nationality === 0 || item.nationality === filter.nationality)
                     " class="selector-item">
-                        <nuxt-img
-                            class="icon"
-                            loading="lazy"
-                            :style="{ backgroundImage: `url(/image/artresource/atlas/weaponframes/bg${item.rarity - 1}.png)` }"
-                            :src="`/image/artresource/atlas/squareicon/${
-                                ship_skin_template[id + `0`].painting
-                            }.png`"
-                            :title="item.name"
-                            @click="selectShip(id)"
-                        />
+                        <div :style="useRarityStyle(() => item.rarity).backgroundStyle.value">
+                            <nuxt-img
+                                class="icon"
+                                loading="lazy"
+                                :src="`/image/artresource/atlas/squareicon/${
+                                    ship_skin_template[id + `0`].painting
+                                }.png`"
+                                :title="item.name"
+                                @click="selectShip(id)"
+                            />
+                        </div>
                         <span class="name">{{ item.name }}</span>
                     </div>
                 </template>
@@ -104,8 +111,8 @@
     </el-drawer>
 </template>
 
-<style lang="scss" scoped>
-    .ship-selector {
+<style lang="scss">
+    .mae-selector {
         display: grid;
         grid-template-rows: auto 1fr;
         max-height: calc(100% + 40px);
@@ -140,8 +147,14 @@
         width: 64px;
         cursor: pointer;
 
+        > div {
+            display: flex;
+            height: 64px;
+        }
+
         .icon {
-            aspect-ratio: 1;
+            max-width: 100%;
+            max-height: 100%;
         }
 
         .name {

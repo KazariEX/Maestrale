@@ -1,4 +1,4 @@
-export const nationalityTable = {
+export default {
     1: "白鹰",
     2: "皇家",
     3: "重樱",
@@ -21,5 +21,3 @@ export const nationalityTable = {
     109: "Atelier Ryza",
     110: "闪乱神乐NL"
 };
-
-export const nationalityOptions = tableToOptions(nationalityTable);
