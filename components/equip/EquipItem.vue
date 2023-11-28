@@ -26,6 +26,14 @@
             props.ship.equips[props.slot] = createEquip(id);
         }
     }
+
+    //鼠标滚轮时
+    function onMouseWheel(event) {
+        if (!equip.value) return;
+
+        const level = equip.value.level + (event.deltaY > 0 ? -1 : 1);
+        equip.value.level = Math.max(0, Math.min(level, equip.value.levelMax));
+    }
 </script>
 
 <template>
@@ -34,7 +42,11 @@
             class="equip-wrapper"
             :style="backgroundStyle"
             @click="openSelector"
-            ><nuxt-img v-if="equip" class="equip-icon" :src="`/image/artresource/atlas/equips/${equip.icon}.png`"/>
+            @wheel="onMouseWheel"
+            ><template v-if="equip">
+                <nuxt-img class="equip-icon" :src="`/image/artresource/atlas/equips/${equip.icon}.png`"/>
+                <span class="equip-level">+{{ equip.level }}</span>
+            </template>
             <div class="equip-frame" :style="frameStyle"></div>
         </div>
     </div>
@@ -63,6 +75,28 @@
         max-width: 48px;
         max-height: 48px;
         margin: auto;
+    }
+
+    .equip-level {
+        $s: 8px;
+
+        position: absolute;
+        bottom: 4px;
+        padding-inline: 2px 10px;
+        background-color: rgb(0 0 0 / 50%);
+        clip-path:
+            polygon(
+                0 0,
+                calc(100% - $s) 0,
+                100% 50%,
+                calc(100% - $s) 100%,
+                0 100%
+            );
+        font-size: 13px;
+        font-weight: bold;
+        line-height: 16px;
+        text-shadow: 1px 1px 4px black;
+        color: var(--el-color-white);
     }
 
     .equip-frame {
