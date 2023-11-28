@@ -35,7 +35,7 @@
         <el-form>
             <el-form-item v-for="(value, attr) in technologyTable[type]" :label="attributeTable[attr]">
                 <el-input-number
-                    v-model="technolagyStore[type][attr]"
+                    v-model="technolagyStore.attrs[type][attr]"
                     :max="value"
                 />
             </el-form-item>

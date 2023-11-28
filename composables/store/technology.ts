@@ -2,11 +2,13 @@ import { cloneDeep } from "lodash";
 import technologyTable from "~/data/constraint/technology";
 
 export const useTechnologyStore = defineStore("technology", {
-    state: () => cloneDeep(technologyTable),
+    state: () => ({
+        attrs: cloneDeep(technologyTable)
+    }),
     actions: {
         get(type: number, attr: string) {
             const t = getTechnolagyType(type);
-            return this[t][attr];
+            return (t in this.attrs) ? this.attrs[t][attr] : 0;
         }
     },
     persist: true
