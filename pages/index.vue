@@ -61,7 +61,6 @@
         display: flex;
         justify-content: center;
         gap: 2em;
-        margin: 2em auto;
     }
 
     .ship-fleet-wrapper {

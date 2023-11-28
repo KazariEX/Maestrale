@@ -18,9 +18,13 @@ export const useFleetStore = defineStore("fleet", () => {
     //当前选中的舰船
     const curShip: Ref<Ship> = ref();
 
+    //属性加成显示模式
+    const attrExtraMode = ref(false);
+
     return {
         main,
         vanguard,
-        curShip
+        curShip,
+        attrExtraMode
     };
 });

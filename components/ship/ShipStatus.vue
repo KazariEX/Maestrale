@@ -8,25 +8,29 @@
 <template>
     <div class="ship-status">
         <div class="attr-table">
-            <ShipStatusItem title="耐久" attr-name="durability"/>
+            <ShipStatusItem attr-name="durability"/>
             <ShipStatusItem :title="armorTable[ship?.armor]" icon="armor"/>
-            <ShipStatusItem title="装填" attr-name="reload"/>
-            <ShipStatusItem title="炮击" attr-name="cannon"/>
-            <ShipStatusItem title="雷击" attr-name="torpedo"/>
-            <ShipStatusItem title="机动" attr-name="dodge"/>
-            <ShipStatusItem title="防空" attr-name="antiaircraft"/>
-            <ShipStatusItem title="航空" attr-name="air"/>
-            <ShipStatusItem title="命中" attr-name="hit"/>
+            <ShipStatusItem attr-name="reload"/>
+            <ShipStatusItem attr-name="cannon"/>
+            <ShipStatusItem attr-name="torpedo"/>
+            <ShipStatusItem attr-name="dodge"/>
+            <ShipStatusItem attr-name="antiaircraft"/>
+            <ShipStatusItem attr-name="air"/>
+            <ShipStatusItem attr-name="hit"/>
             <template v-if="[8, 17, 22].includes(ship?.type)">
-                <ShipStatusItem title="氧气" attr-name="oxy_max"/>
-                <ShipStatusItem title="弹药量" attr-name="ammo"/>
+                <ShipStatusItem attr-name="oxy_max"/>
+                <ShipStatusItem attr-name="ammo"/>
             </template>
             <template v-else>
-                <ShipStatusItem title="反潜" attr-name="antisub"/>
+                <ShipStatusItem attr-name="antisub"/>
             </template>
-            <ShipStatusItem title="航速" attr-name="speed" icon="attr_speed"/>
-            <ShipStatusItem class="attr-last" title="幸运" attr-name="luck"/>
-            <ShipStatusItem class="attr-last" title="消耗" attr-name="oil" icon="expend"/>
+            <ShipStatusItem attr-name="speed" icon="attr_speed"/>
+            <ShipStatusItem class="attr-last" attr-name="luck"/>
+            <ShipStatusItem class="attr-last" attr-name="oil" icon="expend"/>
+            <el-radio-group class="attr-last attr-switch" v-model="fleetStore.attrExtraMode" size="small">
+                <el-radio-button :label="false">装备</el-radio-button>
+                <el-radio-button :label="true">科技</el-radio-button>
+            </el-radio-group>
         </div>
     </div>
 </template>
@@ -41,5 +45,9 @@
 
     .attr-last {
         grid-row-start: 5;
+    }
+
+    .attr-switch {
+        justify-self: right;
     }
 </style>

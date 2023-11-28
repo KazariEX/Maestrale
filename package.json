@@ -9,12 +9,15 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
-    "element-plus": "^2.4.3"
+    "element-plus": "^2.4.3",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.7",
     "@nuxt/devtools": "latest",
     "@nuxt/image": "^1.1.0",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
+    "@types/lodash": "^4.14.202",
     "fs-extra": "^11.2.0",
     "nuxt": "^3.8.2",
     "sass": "^1.69.5",

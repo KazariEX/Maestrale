@@ -7,11 +7,12 @@ export default defineNuxtConfig({
         port: 615
     },
     devtools: {
-        enabled: true
+        enabled: false
     },
     modules: [
         "@element-plus/nuxt",
         "@nuxt/image",
-        "@pinia/nuxt"
+        "@pinia/nuxt",
+        "@pinia-plugin-persistedstate/nuxt"
     ]
 });
