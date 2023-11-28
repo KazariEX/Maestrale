@@ -1,24 +1,11 @@
 import type { WritableComputedRef } from "vue";
+import { Equip } from "./Equip";
 import ship_data_blueprint from "~/data/ShareCfg(VVVIP)/ship_data_blueprint.json";
 import ship_data_statistics from "~/data/ShareCfg(VVVIP)/ship_data_statistics.json";
 import ship_data_strengthen from "~/data/ShareCfg(VVVIP)/ship_data_strengthen.json";
 import ship_data_template from "~/data/ShareCfg(VVVIP)/ship_data_template.json";
 import ship_skin_template from "~/data/ShareCfg(VVVIP)/ship_skin_template.json";
 import ship_strengthen_blueprint from "~/data/ShareCfg(VVVIP)/ship_strengthen_blueprint.json";
-
-type Attributes = Partial<{
-    durability: number,
-    cannon: number,
-    torpedo: number,
-    antiaircraft: number,
-    air: number,
-    reload: number,
-    hit: number,
-    dodge: number,
-    speed: number,
-    luck: number,
-    antisub: number
-}>;
 
 export enum StrengthenType {
     normal,
@@ -41,9 +28,11 @@ export class Ship {
     blueprintMax2?: number;
     blueprintLevel?: WritableComputedRef<number>;
 
+    equips: Ref<Equip[]>;
+
     private data_strengthen: any;
-    private data_statistics: any;
-    private data_template: any;
+    private data_statistics: any[];
+    private data_template: any[];
     private skin_template: any;
 
     constructor(
@@ -67,7 +56,7 @@ export class Ship {
         this.level = ref(125);
 
         //好感
-        this.favor = ref(3);
+        this.favor = ref(4);
 
         if (id in ship_data_blueprint) {
             //科研
@@ -195,6 +184,9 @@ export class Ship {
             //突破
             this.limitBreak = ref(3);
         }
+
+        //装备列表
+        this.equips = ref([]);
     }
 
     //素材
@@ -240,6 +232,17 @@ export class Ship {
         return this.statistics.type;
     });
 
+    //可携带装备类型
+    equipSlotTypes = computed(() => {
+        return [
+            this.template.equip_1,
+            this.template.equip_2,
+            this.template.equip_3,
+            this.template.equip_4,
+            this.template.equip_5
+        ];
+    });
+
     //获取属性白值
     private getAttr(index: number, attrName: keyof Attributes) {
         const favorRate = ["speed", "luck"].includes(attrName) ? 1 : getFavorRate(this.favor.value);
@@ -250,6 +253,21 @@ export class Ship {
             this.strengthen.value[attrName]
         ) * favorRate;
     }
+
+    //获取装备总属性
+    equipAttrs = computed(() => {
+        const attrs = createAttributes();
+
+        for (const equip of this.equips.value) {
+            if (equip === null) continue;
+
+            for (const attr in equip.attrs) {
+                attrs[attr] += equip.attrs[attr];
+            }
+        }
+
+        return attrs;
+    });
 
     //耐久
     durability = computed(() => {
@@ -324,6 +342,23 @@ export class Ship {
     });
 }
 
+export function createShip(id: number, {
+    equips = []
+} = {}) {
+    if (!Reflect.has(ship_data_statistics, id + "1")) {
+        return null;
+    }
+
+    const ship = new Ship(id);
+
+    for (let i = 0; i < 5; i++) {
+        const equip = createEquip(equips[i]);
+        ship.equips.value.push(equip);
+    }
+
+    return ship;
+}
+
 function createAttributes(options: Attributes = {}) {
     return {
         durability: 0,
@@ -343,11 +378,11 @@ function createAttributes(options: Attributes = {}) {
 
 function getFavorRate(favor: number) {
     switch (favor) {
-        case 1: return 1.01;
-        case 2: return 1.03;
-        case 3: return 1.06;
-        case 4: return 1.09;
-        case 5: return 1.12;
+        case 2: return 1.01;
+        case 3: return 1.03;
+        case 4: return 1.06;
+        case 5: return 1.09;
+        case 6: return 1.12;
         default: return 1;
     }
 }

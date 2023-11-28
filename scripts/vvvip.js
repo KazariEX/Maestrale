@@ -1,8 +1,8 @@
 import fs from "fs-extra";
 import path from "path";
 
-pick({
-    filename: "ship_data_blueprint.json",
+const ship_data_blueprint = pick({
+    filename: "ship_data_blueprint",
     folder: "ShareCfg",
     props: [
         "fate_strengthen",
@@ -10,16 +10,16 @@ pick({
     ]
 });
 
-pick({
-    filename: "ship_data_strengthen.json",
+const ship_data_strengthen = pick({
+    filename: "ship_data_strengthen",
     folder: "ShareCfg",
     props: [
         "durability"
     ]
 });
 
-pick({
-    filename: "ship_skin_template.json",
+const ship_skin_template = pick({
+    filename: "ship_skin_template",
     folder: "ShareCfg",
     props: [
         "name",
@@ -27,8 +27,8 @@ pick({
     ]
 });
 
-pick({
-    filename: "ship_strengthen_blueprint.json",
+const ship_strengthen_blueprint = pick({
+    filename: "ship_strengthen_blueprint",
     folder: "ShareCfg",
     props: [
         "effect",
@@ -36,10 +36,40 @@ pick({
         "lv",
         "need_exp"
     ]
-})
+});
 
-pick({
-    filename: "ship_data_statistics.json",
+const equip_data_statistics = pick({
+    filename: "equip_data_statistics",
+    folder: "sharecfgdata",
+    props: [
+        "attribute_1",
+        "attribute_2",
+        "attribute_3",
+        "icon",
+        "name",
+        "nationality",
+        "rarity",
+        "tech",
+        "type",
+        "value_1",
+        "value_2",
+        "value_3",
+        "weapon_id"
+    ]
+});
+
+const equip_data_template = pick({
+    filename: "equip_data_template",
+    folder: "sharecfgdata",
+    props: [
+        "next",
+        "prev",
+        "ship_type_forbidden"
+    ]
+});
+
+const ship_data_statistics = pick({
+    filename: "ship_data_statistics",
     folder: "sharecfgdata",
     props: [
         "ammo",
@@ -55,30 +85,52 @@ pick({
     ]
 });
 
-pick({
-    filename: "ship_data_template.json",
+const ship_data_template = pick({
+    filename: "ship_data_template",
     folder: "sharecfgdata",
     props: [
+        "equip_1",
+        "equip_2",
+        "equip_3",
+        "equip_4",
+        "equip_5",
         "oil_at_end",
-        "oil_at_start",
+        "oil_at_start"
     ]
 });
 
 //属性过滤
-async function pick({ filename, folder, props } = {}) {
-    const i = path.resolve("../data", folder, filename);
-    const o = path.resolve("../data", "ShareCfg(VVVIP)", filename);
+function pick({ filename, folder, props } = {}) {
+    return async function() {
+        const i = path.resolve("../data", folder, filename + ".json");
+        const o = path.resolve("../data", "ShareCfg(VVVIP)", filename + ".json");
 
-    const file = await fs.readFile(i);
-    const j = JSON.parse(file.toString());
+        const file = await fs.readFile(i);
+        const j = JSON.parse(file.toString());
 
-    const res = {};
-    for (const id in j) {
-        res[id] = {};
-        for (const key of props) {
-            res[id][key] = j[id][key];
+        const res = {};
+        for (const id in j) {
+            res[id] = {};
+            for (const key of props) {
+                if (key in j[id]) {
+                    res[id][key] = j[id][key];
+                }
+            }
         }
-    }
 
-    fs.outputFile(o, JSON.stringify(res));
+        fs.outputFile(o, JSON.stringify(res));
+    };
 }
+
+/* ----------------------------------- */
+
+// ship_data_blueprint();
+// ship_data_strengthen();
+// ship_skin_template();
+// ship_strengthen_blueprint();
+// equip_data_statistics();
+// equip_data_template();
+// ship_data_statistics();
+// ship_data_template();
+
+/* ----------------------------------- */

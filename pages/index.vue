@@ -3,13 +3,21 @@
 
     fleetStore.main = [
         null,
-        new Ship(80501),
+        createShip(80501),
         null
     ];
 
     fleetStore.vanguard = [
-        new Ship(60104),
-        new Ship(60105),
+        createShip(60104, {
+            equips: [
+                85040,
+                0,
+                0,
+                0,
+                2640
+            ]
+        }),
+        createShip(60105),
         null
     ];
 
@@ -37,8 +45,13 @@
             </div>
         </div>
         <div class="ship-details">
+            <EquipBar :ship="fleetStore.curShip"/>
             <ShipStatus />
-            <ShipStrengthen />
+            <el-tabs type="border-card">
+                <el-tab-pane label="强化">
+                    <ShipStrengthen />
+                </el-tab-pane>
+            </el-tabs>
         </div>
     </div>
 </template>
@@ -59,7 +72,6 @@
     .ship-fleet {
         display: grid;
         gap: 0.5em;
-        width: 560px;
     }
 
     .ship-details {

@@ -64,5 +64,10 @@
 <style lang="scss" scoped>
     .strengthen-slider {
         gap: 8px;
+        margin-bottom: 0;
+
+        & + & {
+            margin-top: 1em;
+        }
     }
 </style>
