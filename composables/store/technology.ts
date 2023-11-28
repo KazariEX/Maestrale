@@ -8,10 +8,13 @@ export const useTechnologyStore = defineStore("technology", {
     actions: {
         get(type: number, attr: string) {
             const t = getTechnolagyType(type);
-            return (t in this.attrs) ? this.attrs[t][attr] : 0;
+
+            return this.attrs[t]?.[attr] ?? 0;
         }
     },
-    persist: true
+    persist: {
+        paths: ["attrs"]
+    }
 });
 
 function getTechnolagyType(type: number) {

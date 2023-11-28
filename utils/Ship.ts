@@ -349,7 +349,7 @@ export class Ship {
         //合计属性
         for (const attr in attrs) {
             attrs[attr] =
-                this[attr].value +
+                Math.floor(this[attr].value) +
                 this.equipAttrs.value[attr] +
                 technologyStore.get(this.type.value, attr);
         }
@@ -371,6 +371,7 @@ export class Ship {
             attrs.reload +
             attrs.hit * 2 +
             attrs.dodge * 2 +
+            attrs.speed +
             attrs.antisub +
             equipPower
         );

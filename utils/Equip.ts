@@ -55,7 +55,7 @@ export class Equip {
     //属性
     attrs = computed(() => {
         const res = {};
-        for (let i = 0; i < 3; i++) {
+        for (let i = 1; i < 4; i++) {
             const a = `attribute_${i}`;
             const v = `value_${i}`;
             if (a in this.statistics.value) {
