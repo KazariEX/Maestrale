@@ -36,7 +36,7 @@
         const id = await shipSelectorStore.open(fleetTable[props.fleet]);
 
         if (id !== 0) {
-            fleetStore[props.fleet][props.order] = createShip(id);
+            fleetStore[props.fleet][props.order] = (id !== -1) ? createShip(id) : null;
             switchCurShip();
         }
     }

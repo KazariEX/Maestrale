@@ -38,6 +38,12 @@
         equipSelectorStore.resolve(0);
     }
 
+    //卸下装备
+    function removeEquip() {
+        equipSelectorStore.resolve(-1);
+        equipSelectorStore.close();
+    }
+
     //选择装备，返回ID
     function selectEquip(id) {
         equipSelectorStore.resolve(id);
@@ -85,6 +91,9 @@
                 </el-form-item>
             </el-form>
             <div class="selector-list">
+                <a class="selector-remove" @click="removeEquip">
+                    <el-icon><Delete /></el-icon>
+                </a>
                 <template v-for="({ stat, temp }, id) in data" :key="id">
                     <div v-show="
                         equipSelectorStore.curShip.equipSlotTypes[equipSelectorStore.curSlot].includes(stat.type) &&

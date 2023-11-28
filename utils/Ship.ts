@@ -199,47 +199,47 @@ export class Ship {
         return this.data_strengthen.durability;
     }
 
-    private get statistics() {
+    private get curStat() {
         return this.data_statistics[this.limitBreak.value];
     }
 
-    private get template() {
+    private get curTemp() {
         return this.data_template[this.limitBreak.value];
     }
 
     //名称
     name = computed(() => {
-        return this.statistics.name;
+        return this.curStat.name;
     });
 
     //装甲类型
     armor = computed(() => {
-        return this.statistics.armor_type;
+        return this.curStat.armor_type;
     });
 
     //阵营
     nationality = computed(() => {
-        return this.statistics.nationality;
+        return this.curStat.nationality;
     });
 
     //稀有度
     rarity = computed(() => {
-        return this.statistics.rarity;
+        return this.curStat.rarity;
     });
 
     //舰种
     type = computed(() => {
-        return this.statistics.type;
+        return this.curStat.type;
     });
 
     //可携带装备类型
     equipSlotTypes = computed(() => {
         return [
-            this.template.equip_1,
-            this.template.equip_2,
-            this.template.equip_3,
-            this.template.equip_4,
-            this.template.equip_5
+            this.curTemp.equip_1,
+            this.curTemp.equip_2,
+            this.curTemp.equip_3,
+            this.curTemp.equip_4,
+            this.curTemp.equip_5
         ];
     });
 
@@ -248,8 +248,8 @@ export class Ship {
         const favorRate = ["speed", "luck"].includes(attrName) ? 1 : getFavorRate(this.favor.value);
 
         return (
-            this.statistics.attrs[index] +
-            this.statistics.attrs_growth[index] * (this.level.value - 1) / 1000 +
+            this.curStat.attrs[index] +
+            this.curStat.attrs_growth[index] * (this.level.value - 1) / 1000 +
             this.strengthen.value[attrName]
         ) * favorRate;
     }
@@ -326,19 +326,19 @@ export class Ship {
 
     //氧气
     oxy_max = computed(() => {
-        return this.statistics.oxy_max;
+        return this.curStat.oxy_max;
     });
 
     //弹药量
     ammo = computed(() => {
-        return this.statistics.ammo;
+        return this.curStat.ammo;
     });
 
     //油耗
     oil = computed(() => {
         const levelRate = 0.5 + 0.005 * Math.min(99, this.level.value);
 
-        return Math.floor((([8, 17, 22].includes(this.type.value) ? 0 : 1) + this.template.oil_at_end * levelRate));
+        return Math.floor((([8, 17, 22].includes(this.type.value) ? 0 : 1) + this.curTemp.oil_at_end * levelRate));
     });
 
     //战力

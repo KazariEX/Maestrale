@@ -38,6 +38,12 @@
         shipSelectorStore.resolve(0);
     }
 
+    //移除舰娘
+    function removeShip() {
+        shipSelectorStore.resolve(-1);
+        shipSelectorStore.close();
+    }
+
     //选择舰娘，返回ID
     function selectShip(id) {
         shipSelectorStore.resolve(id);
@@ -85,6 +91,9 @@
                 </el-form-item>
             </el-form>
             <div class="selector-list">
+                <a class="selector-remove" @click="removeShip">
+                    <el-icon><Delete /></el-icon>
+                </a>
                 <template v-for="(item, id) in statis" :key="id">
                     <div v-show="
                         shipSelectorStore.curTypes.includes(item.type) &&
@@ -138,6 +147,15 @@
         gap: 16px;
         padding-bottom: 20px;
         font-size: 14px;
+    }
+
+    .selector-remove {
+        display: flex;
+        width: 64px;
+        aspect-ratio: 1;
+        padding: 7px;
+        border: 1px solid var(--el-border-color);
+        font-size: 48px;
     }
 
     .selector-item {

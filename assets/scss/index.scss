@@ -17,6 +17,7 @@ body {
 a {
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
 
     &.router-link-active {
         color: var(--el-color-primary);

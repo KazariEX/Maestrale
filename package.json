@@ -8,6 +8,7 @@
     "vvvip": "cd scripts && nodemon vvvip.js"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
     "@pinia/nuxt": "^0.5.1",
     "element-plus": "^2.4.3",
     "lodash": "^4.17.21"
