@@ -99,6 +99,34 @@ const ship_data_template = pick({
     ]
 });
 
+const spweapon_data_statistics = pick({
+    filename: "spweapon_data_statistics",
+    folder: "sharecfgdata",
+    props: [
+        "attribute_1",
+        "attribute_2",
+        "icon",
+        "name",
+        "next",
+        "prev",
+        "rarity",
+        "type",
+        "unique",
+        "value_1",
+        "value_1_random",
+        "value_2",
+        "value_2_random"
+    ]
+});
+
+const spweapon_type = pick({
+    filename: "spweapon_type",
+    folder: "ShareCfg",
+    props: [
+        "ship_type"
+    ]
+});
+
 //属性过滤
 function pick({ filename, folder, props } = {}) {
     return async function() {
@@ -132,5 +160,7 @@ function pick({ filename, folder, props } = {}) {
 // equip_data_template();
 // ship_data_statistics();
 // ship_data_template();
+// spweapon_data_statistics();
+// spweapon_type();
 
 /* ----------------------------------- */

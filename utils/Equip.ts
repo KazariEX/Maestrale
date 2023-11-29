@@ -8,14 +8,13 @@ export class Equip {
     private data_template: any[];
 
     constructor(
-        private id: number
+        public id: number
     ) {
         this.data_statistics = [];
         this.data_template = [];
         for (let i = id; i !== 0; ) {
             const stat = equip_data_statistics[i];
             const temp = equip_data_template[i];
-
             this.data_statistics.push(stat);
             this.data_template.push(temp);
             i = temp.next;
@@ -55,7 +54,7 @@ export class Equip {
     //属性
     attrs = computed(() => {
         const res = {};
-        for (let i = 1; i < 4; i++) {
+        for (let i = 1; i <= 3; i++) {
             const a = `attribute_${i}`;
             const v = `value_${i}`;
             if (a in this.statistics.value) {
@@ -86,6 +85,9 @@ export function createEquip(id: number) {
     if (id % 10 !== 0 || !Reflect.has(equip_data_template, id)) {
         return null;
     }
+
+    //类型收束
+    id = Number(id);
 
     return new Equip(id);
 }

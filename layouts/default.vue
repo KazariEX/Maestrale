@@ -3,8 +3,9 @@
     <main class="mae-main">
         <slot></slot>
     </main>
-    <EquipSelector />
     <ShipSelector />
+    <EquipSelector />
+    <SpweaponSelector />
 </template>
 
 <style lang="scss">

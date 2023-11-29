@@ -4,16 +4,9 @@
     import limitBreakTable from "~/data/constraint/limit-break";
 
     const props = defineProps({
-        ship: {
-            type: Ship,
-            require: true
-        },
-        fleet: {
-            type: String
-        },
-        order: {
-            type: Number
-        }
+        ship: Ship,
+        fleet: String,
+        order: Number
     });
 
     const fleetStore = useFleetStore();

@@ -2,15 +2,9 @@
     import attributeTable from "~/data/constraint/attribute";
 
     const props = defineProps({
-        title: {
-            type: String
-        },
-        attrName: {
-            type: String
-        },
-        icon: {
-            type: String
-        }
+        title: String,
+        attrName: String,
+        icon: String
     });
 
     const fleetStore = useFleetStore();

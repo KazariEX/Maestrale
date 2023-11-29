@@ -1,5 +1,6 @@
 import type { WritableComputedRef } from "vue";
 import { Equip } from "./Equip";
+import { SPWeapon } from "./SPWeapon";
 import ship_data_blueprint from "~/data/ShareCfg(VVVIP)/ship_data_blueprint.json";
 import ship_data_statistics from "~/data/ShareCfg(VVVIP)/ship_data_statistics.json";
 import ship_data_strengthen from "~/data/ShareCfg(VVVIP)/ship_data_strengthen.json";
@@ -29,6 +30,7 @@ export class Ship {
     blueprintLevel?: WritableComputedRef<number>;
 
     equips: Ref<Equip[]>;
+    spweapon: Ref<SPWeapon>;
 
     private data_strengthen: any;
     private data_statistics: any[];
@@ -36,7 +38,7 @@ export class Ship {
     private skin_template: any;
 
     constructor(
-        private id: number
+        public id: number
     ) {
         this.data_statistics = [
             (ship_data_statistics as any)[id + "1"],
@@ -187,6 +189,9 @@ export class Ship {
 
         //装备列表
         this.equips = ref([]);
+
+        //兵装
+        this.spweapon = ref(null);
     }
 
     //素材
@@ -254,11 +259,11 @@ export class Ship {
         ) * favorRate;
     }
 
-    //获取装备总属性
+    //获取装备总属性（含兵装）
     equipAttrs = computed(() => {
         const attrs = createAttributes();
 
-        for (const equip of this.equips.value) {
+        for (const equip of [...this.equips.value, this.spweapon.value]) {
             if (equip === null) continue;
 
             for (const attr in equip.attrs) {
@@ -379,18 +384,28 @@ export class Ship {
 }
 
 export function createShip(id: number, {
-    equips = []
+    equips = [],
+    spweapon = null
 } = {}) {
     if (!Reflect.has(ship_data_statistics, id + "1")) {
         return null;
     }
 
+    //类型收束
+    id = Number(id);
+
+    //舰娘
     const ship = new Ship(id);
 
+    //装备
     for (let i = 0; i < 5; i++) {
         const equip = createEquip(equips[i]);
         ship.equips.value.push(equip);
     }
+
+    //兵装
+    const spw = createSPWeapon(spweapon);
+    ship.spweapon.value = spw;
 
     return ship;
 }

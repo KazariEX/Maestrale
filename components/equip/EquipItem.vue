@@ -1,13 +1,7 @@
 <script setup>
     const props = defineProps({
-        ship: {
-            type: Ship,
-            require: true
-        },
-        slot: {
-            type: Number,
-            require: true
-        }
+        ship: Ship,
+        slot: Number
     });
 
     const equip = computed(() => {
@@ -17,8 +11,7 @@
     const equipSelectorStore = useEquipSelectorStore();
     const { backgroundStyle, frameStyle } = useRarityStyle(() => equip.value?.rarity);
 
-
-    //打开舰娘选择器
+    //打开装备选择器
     async function openSelector() {
         if (!props.ship) return;
 
@@ -46,7 +39,7 @@
             @wheel="onMouseWheel"
             ><template v-if="equip">
                 <nuxt-img class="equip-icon" :src="`/image/artresource/atlas/equips/${equip.icon}.png`"/>
-                <span class="equip-level">+{{ equip.level }}</span>
+                <span class="mask-text equip-level">+{{ equip.level }}</span>
             </template>
             <div class="equip-frame" :style="frameStyle"></div>
         </div>
@@ -81,10 +74,8 @@
     .equip-level {
         $s: 8px;
 
-        position: absolute;
         bottom: 4px;
         padding-inline: 2px 10px;
-        background-color: rgb(0 0 0 / 50%);
         clip-path:
             polygon(
                 0 0,
@@ -93,11 +84,7 @@
                 calc(100% - $s) 100%,
                 0 100%
             );
-        font-size: 13px;
-        font-weight: bold;
         line-height: 16px;
-        text-shadow: 1px 1px 4px black;
-        color: var(--el-color-white);
     }
 
     .equip-frame {

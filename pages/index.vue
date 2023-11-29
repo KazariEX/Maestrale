@@ -15,7 +15,8 @@
                 0,
                 0,
                 2640
-            ]
+            ],
+            spweapon: 1010220
         }),
         createShip(60105),
         null
