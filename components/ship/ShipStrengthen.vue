@@ -4,27 +4,28 @@
 
     const data = computed(() => {
         switch (ship.value?.strengthenType) {
-            case StrengthenType.normal: {
+            case StrengthenType.normal:
+            case StrengthenType.meta: {
                 return [
                     {
                         label: "炮击",
-                        model: [ship.value.strengthen, "cannon"],
-                        max: ship.value.strengthenMax[0]
+                        model: [ship.value.strengthenAdjust, "cannon"],
+                        max: ship.value.strengthenMax.cannon
                     },
                     {
                         label: "雷击",
-                        model: [ship.value.strengthen, "torpedo"],
-                        max: ship.value.strengthenMax[1]
+                        model: [ship.value.strengthenAdjust, "torpedo"],
+                        max: ship.value.strengthenMax.torpedo
                     },
                     {
                         label: "航空",
-                        model: [ship.value.strengthen, "air"],
-                        max: ship.value.strengthenMax[3]
+                        model: [ship.value.strengthenAdjust, "air"],
+                        max: ship.value.strengthenMax.air
                     },
                     {
                         label: "装填",
-                        model: [ship.value.strengthen, "reload"],
-                        max: ship.value.strengthenMax[4]
+                        model: [ship.value.strengthenAdjust, "reload"],
+                        max: ship.value.strengthenMax.reload
                     }
                 ];
             }

@@ -5,8 +5,11 @@ import ship_data_blueprint from "~/data/ShareCfg(VVVIP)/ship_data_blueprint.json
 import ship_data_statistics from "~/data/ShareCfg(VVVIP)/ship_data_statistics.json";
 import ship_data_strengthen from "~/data/ShareCfg(VVVIP)/ship_data_strengthen.json";
 import ship_data_template from "~/data/ShareCfg(VVVIP)/ship_data_template.json";
+import ship_meta_repair_effect from "~/data/ShareCfg(VVVIP)/ship_meta_repair_effect.json";
+import ship_meta_repair from "~/data/ShareCfg(VVVIP)/ship_meta_repair.json";
 import ship_skin_template from "~/data/ShareCfg(VVVIP)/ship_skin_template.json";
 import ship_strengthen_blueprint from "~/data/ShareCfg(VVVIP)/ship_strengthen_blueprint.json";
+import ship_strengthen_meta from "~/data/ShareCfg(VVVIP)/ship_strengthen_meta.json";
 
 export enum StrengthenType {
     normal,
@@ -19,8 +22,10 @@ export class Ship {
     favor: Ref<number>;
     limitBreak: Ref<number> | WritableComputedRef<number>;
 
-    strengthen: Ref<Attributes>;
+    strengthen: ComputedRef<Attributes>;
+    strengthenAdjust: Ref<Attributes>;
     strengthenType: StrengthenType;
+    strengthenMax?: Attributes;
 
     blueprint?: Ref<number>;
     blueprint1?: WritableComputedRef<number>;
@@ -32,7 +37,6 @@ export class Ship {
     equips: Ref<Equip[]>;
     spweapon: Ref<SPWeapon>;
 
-    private data_strengthen: any;
     private data_statistics: any[];
     private data_template: any[];
     private skin_template: any;
@@ -65,8 +69,8 @@ export class Ship {
             this.strengthenType = StrengthenType.blueprint;
 
             //读取数据
-            const data_blueprint = (ship_data_blueprint as any)[id];
-            this.data_strengthen = [
+            const data_blueprint = ship_data_blueprint[id];
+            const data_strengthen = [
                 ...data_blueprint.strengthen_effect,
                 ...data_blueprint.fate_strengthen
             ].map((i: number) => {
@@ -74,12 +78,12 @@ export class Ship {
             });
 
             //最大蓝图数量（常规）
-            this.blueprintMax1 = this.data_strengthen.slice(0, 30).reduce((res, item) => {
+            this.blueprintMax1 = data_strengthen.slice(0, 30).reduce((res, item) => {
                 return res + item.need_exp;
             }, 0) / 10;
 
             //最大蓝图数量（天运）
-            this.blueprintMax2 = this.data_strengthen.slice(30).reduce((res, item) => {
+            this.blueprintMax2 = data_strengthen.slice(30).reduce((res, item) => {
                 return res + item.need_exp;
             }, 0) / 10;
 
@@ -111,7 +115,7 @@ export class Ship {
                 get: () => {
                     let level = 0;
                     let exp = 0;
-                    for (const item of this.data_strengthen) {
+                    for (const item of data_strengthen) {
                         exp += item.need_exp;
                         if (this.blueprint.value >= exp / 10) {
                             level++;
@@ -123,7 +127,7 @@ export class Ship {
                 set: (level) => {
                     let exp = 0;
                     for (let i = 0; i < level; i++) {
-                        exp += this.data_strengthen[i].need_exp;
+                        exp += data_strengthen[i].need_exp;
                     }
                     this.blueprint.value = exp / 10;
                 }
@@ -134,7 +138,7 @@ export class Ship {
                 const res = createAttributes();
 
                 for (let i = 0; i < this.blueprintLevel.value; i++) {
-                    const item = this.data_strengthen[i];
+                    const item = data_strengthen[i];
 
                     for (const attr of item.effect_attr) {
                         res[attr[0]] += attr[1];
@@ -168,20 +172,79 @@ export class Ship {
                 }
             });
         }
+        else if (id in ship_strengthen_meta) {
+            //META
+            this.strengthenType = StrengthenType.meta;
+
+            //读取数据
+            const data_strengthen = ship_strengthen_meta[id];
+            const meta_repair_effect = data_strengthen.repair_effect.map(([per, key]) => {
+                return {
+                    per,
+                    ...ship_meta_repair_effect[key]
+                };
+            });
+
+            //满强化值
+            this.strengthenMax = createAttributes();
+            for (const attr of ["cannon", "torpedo", "air", "reload"]) {
+                const repairList = data_strengthen[`repair_${attr}`];
+
+                for (const key of repairList) {
+                    const [attr, value] = ship_meta_repair[key].effect_attr;
+                    this.strengthenMax[attr] += value;
+                }
+            }
+
+            //可调节强化值
+            this.strengthenAdjust = ref({ ...this.strengthenMax });
+
+            //最终强化值
+            this.strengthen = computed(() => {
+                const res = createAttributes(this.strengthenAdjust.value);
+
+                let acc = 0;
+                let total = 0;
+                for (const attr in res) {
+                    acc += res[attr];
+                    total += this.strengthenMax[attr];
+                }
+                const rate = acc / total * 100;
+
+                for (const effect of meta_repair_effect) {
+                    if (rate >= effect.per) {
+                        for (const [attr, value] of effect.effect_attr) {
+                            res[attr] += value;
+                        }
+                    }
+                    else break;
+                }
+                return res;
+            });
+
+            //突破
+            this.limitBreak = ref(3);
+        }
         else {
             //常规
             this.strengthenType = StrengthenType.normal;
 
             //读取数据
-            this.data_strengthen = (ship_data_strengthen as any)[id];
+            const data_strengthen = ship_data_strengthen[id];
 
-            //强化
-            this.strengthen = ref(createAttributes({
-                cannon: this.strengthenMax[0],
-                torpedo: this.strengthenMax[1],
-                air: this.strengthenMax[3],
-                reload: this.strengthenMax[4]
-            }));
+            //满强化值
+            this.strengthenMax = createAttributes({
+                cannon: data_strengthen.durability[0],
+                torpedo: data_strengthen.durability[1],
+                air: data_strengthen.durability[3],
+                reload: data_strengthen.durability[4]
+            });
+
+            //可调节强化值
+            this.strengthenAdjust = ref({ ...this.strengthenMax });
+
+            //最终强化值
+            this.strengthen = computed(() => this.strengthenAdjust.value);
 
             //突破
             this.limitBreak = ref(3);
@@ -197,11 +260,6 @@ export class Ship {
     //素材
     get painting() {
         return this.skin_template.painting;
-    }
-
-    //满强化值
-    get strengthenMax(): number[] {
-        return this.data_strengthen.durability;
     }
 
     private get curStat() {
