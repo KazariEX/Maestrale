@@ -52,7 +52,7 @@
             <div class="ship-frame" :style="frameStyle"></div>
         </div>
         <template v-if="ship">
-            <section class="ship-section">
+            <section v-if="fleetStore.displayMode" class="ship-section">
                 <div class="ship-info">
                     <p><el-text type="info">名称：</el-text><el-text>{{ ship.name }}</el-text></p>
                     <p><el-text>{{ Math.floor(ship.power) }}</el-text> <el-text type="info">战力</el-text></p>
@@ -82,8 +82,9 @@
                     </el-select>
                 </div>
             </section>
+            <EquipBar v-else :ship="ship"/>
         </template>
-        <span v-else class="ship-no-data">NO DATA</span>
+        <span v-else class="ship-default">NO SHIP</span>
     </div>
 </template>
 
@@ -92,7 +93,6 @@
         display: flex;
         align-items: center;
         gap: 0.5em;
-        width: 490px;
         height: calc(5em + 2px);
         padding: 0.5em;
         border: 1px solid var(--el-border-color);
@@ -140,7 +140,7 @@
         gap: 0.5em;
     }
 
-    .ship-no-data {
+    .ship-default {
         flex: 1;
         font-size: 32px;
         font-weight: bold;

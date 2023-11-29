@@ -27,6 +27,10 @@
 
 <template>
     <div class="mae-index">
+        <el-radio-group class="ship-fleet-display" v-model="fleetStore.displayMode">
+            <el-radio-button :label="false">装备编队</el-radio-button>
+            <el-radio-button :label="true">舰船详情</el-radio-button>
+        </el-radio-group>
         <div class="ship-fleet-wrapper">
             <div class="ship-fleet">
                 <ShipItem
@@ -59,9 +63,20 @@
 
 <style lang="scss" scoped>
     .mae-index {
-        display: flex;
-        justify-content: center;
+        display: grid;
+        grid-template:
+            "A A"
+            "B C";
         gap: 2em;
+    }
+
+    .ship-fleet-display {
+        grid-area: A;
+        justify-self: center;
+    }
+
+    .ship-fleet-wrapper, .ship-details {
+        width: 486px;
     }
 
     .ship-fleet-wrapper {
@@ -78,6 +93,18 @@
         display: flex;
         flex-direction: column;
         gap: 2em;
-        width: 480px;
+    }
+
+    @media (width >= 1004px) {
+        .mae-index {
+            justify-content: center;
+        }
+    }
+
+    @media (width < 1004px) {
+        .mae-index {
+            grid-template-areas: "A" "B" "C";
+            justify-items: center;
+        }
     }
 </style>

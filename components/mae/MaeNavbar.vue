@@ -17,6 +17,7 @@
         width: 100vw;
         height: 64px;
         box-shadow: var(--el-box-shadow);
+        background-color: var(--el-bg-color);
     }
 
     .nav-item {

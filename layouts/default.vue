@@ -12,4 +12,8 @@
     .mae-main {
         padding-top: 2em;
     }
+
+    .mae-navbar {
+        z-index: 64;
+    }
 </style>
