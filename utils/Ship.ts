@@ -483,39 +483,9 @@ export class Ship {
     });
 
     //战力
+    private powerCalculator = new PowerCalculator(this);
     power = computed(() => {
-        const attrs = createAttributes();
-        const technologyStore = useTechnologyStore();
-
-        //合计属性
-        for (const attr in attrs) {
-            attrs[attr] =
-                Math.floor(this[attr].value) +
-                this.equipAttrs.value[attr] +
-                technologyStore.get(this.type.value, attr);
-        }
-
-        //装备品质战力
-        const equipPower = this.equips.value.reduce((res, equip) => {
-            if (equip) {
-                res += equip.power as any;
-            }
-            return res;
-        }, 0);
-
-        return (
-            attrs.durability * 0.2 +
-            attrs.cannon +
-            attrs.torpedo +
-            attrs.antiaircraft +
-            attrs.air +
-            attrs.reload +
-            attrs.hit * 2 +
-            attrs.dodge * 2 +
-            attrs.speed +
-            attrs.antisub +
-            equipPower
-        );
+        return this.powerCalculator.power.value;
     });
 }
 
@@ -546,7 +516,7 @@ export function createShip(id: number, {
     return ship;
 }
 
-function createAttributes(options: Attributes = {}) {
+export function createAttributes(options: Attributes = {}) {
     return {
         durability: 0,
         cannon: 0,
