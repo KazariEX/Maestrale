@@ -51,7 +51,7 @@
         position: relative;
         width: 64px;
         height: 64px;
-        background-image: url("/image/artresource/ui/shipinfoui/sucai_butten 1.png");
+        background-image: url("/image/artresource/ui/shipinfoui/sucai_button.png");
 
         & + & {
             margin-left: -1px;
