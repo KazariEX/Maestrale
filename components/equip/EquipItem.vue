@@ -24,6 +24,7 @@
     //鼠标滚轮时
     function onMouseWheel(event) {
         if (!equip.value) return;
+        event.preventDefault();
 
         const level = equip.value.level + (event.deltaY > 0 ? -1 : 1);
         equip.value.level = Math.max(0, Math.min(level, equip.value.levelMax));

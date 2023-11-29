@@ -23,6 +23,7 @@
     //鼠标滚轮时
     function onMouseWheel(event) {
         if (!spweapon.value) return;
+        event.preventDefault();
 
         const level = spweapon.value.level + (event.deltaY > 0 ? -1 : 1);
         spweapon.value.level = Math.max(0, Math.min(10, level));

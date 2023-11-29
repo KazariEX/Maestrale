@@ -5,11 +5,13 @@ import ship_data_blueprint from "~/data/ShareCfg(VVVIP)/ship_data_blueprint.json
 import ship_data_statistics from "~/data/ShareCfg(VVVIP)/ship_data_statistics.json";
 import ship_data_strengthen from "~/data/ShareCfg(VVVIP)/ship_data_strengthen.json";
 import ship_data_template from "~/data/ShareCfg(VVVIP)/ship_data_template.json";
+import ship_data_trans from "~/data/ShareCfg(VVVIP)/ship_data_trans.json";
 import ship_meta_repair_effect from "~/data/ShareCfg(VVVIP)/ship_meta_repair_effect.json";
 import ship_meta_repair from "~/data/ShareCfg(VVVIP)/ship_meta_repair.json";
 import ship_skin_template from "~/data/ShareCfg(VVVIP)/ship_skin_template.json";
 import ship_strengthen_blueprint from "~/data/ShareCfg(VVVIP)/ship_strengthen_blueprint.json";
 import ship_strengthen_meta from "~/data/ShareCfg(VVVIP)/ship_strengthen_meta.json";
+import transform_data_template from "~/data/ShareCfg(VVVIP)/transform_data_template.json";
 
 export enum StrengthenType {
     normal,
@@ -33,6 +35,11 @@ export class Ship {
     blueprintMax1?: number;
     blueprintMax2?: number;
     blueprintLevel?: WritableComputedRef<number>;
+
+    canTransform: boolean;
+    transformTable?: Array<Array<number>>;
+    transformTemplate?: any;
+    isModernized?: Ref<false>;
 
     equips: Ref<Equip[]>;
     spweapon: Ref<SPWeapon>;
@@ -250,6 +257,57 @@ export class Ship {
             this.limitBreak = ref(3);
         }
 
+        if (id in ship_data_trans) {
+            //可改造
+            this.canTransform = true;
+
+            //读取数据
+            this.transformTable = [];
+            this.transformTemplate = {};
+            for (const item of ship_data_trans[id].transform_list) {
+                const table = [ , , , ];
+
+                for (const [index, key] of item) {
+                    this.transformTemplate[key] = {
+                        ...transform_data_template[key],
+                        enable: ref(true),
+                        next_id: []
+                    };
+                    table[index - 2] = key;
+                }
+                this.transformTable.push(table);
+            }
+
+            //添加后继节点
+            for (const key in this.transformTemplate) {
+                const temp = this.transformTemplate[key];
+                for (const i of temp.condition_id) {
+                    this.transformTemplate[i].next_id.push(key);
+                }
+            }
+
+            //链式监听
+            for (const key in this.transformTemplate) {
+                const temp = this.transformTemplate[key];
+                watch(() => temp.enable.value, (value) => {
+                    if (value) {
+                        for (const i of temp.condition_id) {
+                            this.transformTemplate[i].enable.value = true;
+                        }
+                    }
+                    else {
+                        for (const i of temp.next_id) {
+                            this.transformTemplate[i].enable.value = false;
+                        }
+                    }
+                });
+            }
+        }
+        else {
+            //不可改造
+            this.canTransform = false;
+        }
+
         //装备列表
         this.equips = ref([]);
 
@@ -314,8 +372,29 @@ export class Ship {
             this.curStat.attrs[index] +
             this.curStat.attrs_growth[index] * (this.level.value - 1) / 1000 +
             this.strengthen.value[attrName]
-        ) * favorRate;
+        ) * favorRate +
+            this.transAttrs.value[attrName];
     }
+
+    //获取改造总属性
+    transAttrs = computed(() => {
+        const attrs = createAttributes();
+
+        if (this.canTransform) {
+            for (const key in this.transformTemplate) {
+                const temp = this.transformTemplate[key];
+
+                if (temp.enable.value) {
+                    for (const effect of temp.effect) {
+                        for (const attr in effect) {
+                            attrs[attr] += effect[attr];
+                        }
+                    }
+                }
+            }
+        }
+        return attrs;
+    });
 
     //获取装备总属性（含兵装）
     equipAttrs = computed(() => {
@@ -328,7 +407,6 @@ export class Ship {
                 attrs[attr] += equip.attrs[attr];
             }
         }
-
         return attrs;
     });
 

@@ -56,6 +56,9 @@
                 <el-tab-pane label="强化">
                     <ShipStrengthen />
                 </el-tab-pane>
+                <el-tab-pane v-if="fleetStore.curShip?.canTransform" label="改造">
+                    <ShipTransform />
+                </el-tab-pane>
             </el-tabs>
         </div>
     </div>

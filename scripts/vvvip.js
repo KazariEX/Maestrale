@@ -68,6 +68,12 @@ const vvvip = {
             "oil_at_start"
         ]
     },
+    ship_data_trans: {
+        folder: "ShareCfg",
+        props: [
+            "transform_list"
+        ]
+    },
     ship_meta_repair_effect: {
         folder: "ShareCfg",
         props: [
@@ -128,6 +134,15 @@ const vvvip = {
         folder: "ShareCfg",
         props: [
             "ship_type"
+        ]
+    },
+    transform_data_template: {
+        folder: "ShareCfg",
+        props: [
+            "condition_id",
+            "effect",
+            "icon",
+            "name"
         ]
     }
 };
