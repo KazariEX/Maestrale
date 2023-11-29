@@ -18,25 +18,28 @@
         18: "超巡",
         19: "运输",
         22: "风帆"
-    }
+    };
 
-    const technolagyStore = useTechnologyStore();
+    const technologyStore = useTechnologyStore();
     const type = ref(1);
 </script>
 
 <template>
-    <div class="mae-technolagy">
+    <div class="mae-technology">
         <el-radio-group v-model="type">
             <el-radio-button
                 v-for="(name, label) in radioList"
                 :label="label"
             >{{ name }}</el-radio-button>
         </el-radio-group>
-        <el-form>
-            <el-form-item v-for="(value, attr) in technologyTable[type]" :label="attributeTable[attr]">
-                <el-input-number
-                    v-model="technolagyStore.attrs[type][attr]"
-                    :max="value"
+        <el-form class="technology-form">
+            <el-form-item v-for="(value, attr) in technologyTable[type]" class="technology-slider" :label="attributeTable[attr]">
+                <el-slider
+                    v-model="technologyStore.attrs[type][attr]"
+                    :max="value || 1"
+                    :disabled="value === 0"
+                    :show-tooltip="false"
+                    show-input
                 />
             </el-form-item>
         </el-form>
@@ -44,10 +47,20 @@
 </template>
 
 <style lang="scss" scoped>
-    .mae-technolagy {
+    .mae-technology {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 2em;
+    }
+
+    .technology-form {
+        display: grid;
+        width: 100%;
+        max-width: 480px;
+    }
+
+    .technology-slider {
+        gap: 8px;
     }
 </style>

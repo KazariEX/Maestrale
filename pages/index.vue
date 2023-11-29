@@ -95,13 +95,13 @@
         gap: 2em;
     }
 
-    @media (width >= 1004px) {
+    @media (width >= 1024px) {
         .mae-index {
             justify-content: center;
         }
     }
 
-    @media (width < 1004px) {
+    @media (width < 1024px) {
         .mae-index {
             grid-template-areas: "A" "B" "C";
             justify-items: center;

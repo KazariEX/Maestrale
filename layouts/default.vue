@@ -10,10 +10,22 @@
 
 <style lang="scss">
     .mae-main {
-        padding-top: 2em;
+        --pd: 2em;
+
+        overflow: auto;
+        width: 100vw;
+        padding-block: 2em calc(4em + var(--pd));
     }
 
     .mae-navbar {
         z-index: 64;
+    }
+
+    @media (width < 1024px) {
+        .mae-main {
+            --pd: 0.5em;
+
+            padding-inline: 0.5em;
+        }
     }
 </style>

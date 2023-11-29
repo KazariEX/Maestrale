@@ -5,7 +5,7 @@
 <template>
     <div class="mae-navbar">
         <nuxt-link class="nav-item" to="/">编队</nuxt-link>
-        <nuxt-link class="nav-item" to="/technolagy">舰队科技</nuxt-link>
+        <nuxt-link class="nav-item" to="/technology">舰队科技</nuxt-link>
     </div>
 </template>
 
