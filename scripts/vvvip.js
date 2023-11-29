@@ -152,15 +152,15 @@ function pick({ filename, folder, props } = {}) {
 
 /* ----------------------------------- */
 
-// ship_data_blueprint();
-// ship_data_strengthen();
-// ship_skin_template();
-// ship_strengthen_blueprint();
-// equip_data_statistics();
-// equip_data_template();
-// ship_data_statistics();
-// ship_data_template();
-// spweapon_data_statistics();
-// spweapon_type();
+ship_data_blueprint();
+ship_data_strengthen();
+ship_skin_template();
+ship_strengthen_blueprint();
+equip_data_statistics();
+equip_data_template();
+ship_data_statistics();
+ship_data_template();
+spweapon_data_statistics();
+spweapon_type();
 
 /* ----------------------------------- */

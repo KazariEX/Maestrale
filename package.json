@@ -4,8 +4,8 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "vvvip": "cd scripts && nodemon vvvip.js"
+    "postinstall": "nuxt prepare && pnpm vvvip",
+    "vvvip": "cd scripts && node vvvip.js"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
