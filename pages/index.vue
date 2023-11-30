@@ -28,7 +28,7 @@
 <template>
     <div class="mae-index">
         <el-radio-group class="ship-fleet-display" v-model="fleetStore.displayMode">
-            <el-radio-button :label="false">装备编队</el-radio-button>
+            <el-radio-button :label="false">装备显示</el-radio-button>
             <el-radio-button :label="true">舰船详情</el-radio-button>
         </el-radio-group>
         <div class="ship-fleet-wrapper">
@@ -48,6 +48,7 @@
                     :ship="ship"
                 />
             </div>
+            <ExScorePanel />
         </div>
         <div class="ship-details">
             <EquipBar :ship="fleetStore.curShip"/>
