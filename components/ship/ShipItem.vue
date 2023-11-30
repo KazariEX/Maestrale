@@ -58,8 +58,8 @@
         <template v-if="ship">
             <section v-if="fleetStore.displayMode" class="ship-section">
                 <div class="ship-info">
-                    <p><el-text type="info">名称：</el-text><el-text>{{ ship.name }}</el-text></p>
-                    <p><el-text>{{ Math.floor(ship.power) }}</el-text> <el-text type="info">战力</el-text></p>
+                    <div><el-text type="info">名称：</el-text><el-text>{{ ship.name }}</el-text></div>
+                    <div><el-text>{{ Math.floor(ship.power) }}</el-text> <el-text type="info">战力</el-text></div>
                 </div>
                 <div class="ship-props">
                     <el-input-number
@@ -97,7 +97,6 @@
         display: flex;
         align-items: center;
         gap: 0.5em;
-        height: calc(5em + 2px);
         padding: 0.5em;
         border: 1px solid var(--el-border-color);
         border-radius: var(--el-border-radius-base);
