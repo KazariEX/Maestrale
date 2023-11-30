@@ -7,6 +7,7 @@ import ship_data_statistics from "~/data/ShareCfg(VVVIP)/ship_data_statistics.js
 import ship_data_strengthen from "~/data/ShareCfg(VVVIP)/ship_data_strengthen.json";
 import ship_data_template from "~/data/ShareCfg(VVVIP)/ship_data_template.json";
 import ship_data_trans from "~/data/ShareCfg(VVVIP)/ship_data_trans.json";
+import ship_meta_breakout from "~/data/ShareCfg(VVVIP)/ship_meta_breakout.json";
 import ship_meta_repair_effect from "~/data/ShareCfg(VVVIP)/ship_meta_repair_effect.json";
 import ship_meta_repair from "~/data/ShareCfg(VVVIP)/ship_meta_repair.json";
 import ship_skin_template from "~/data/ShareCfg(VVVIP)/ship_skin_template.json";
@@ -28,7 +29,7 @@ export class Ship {
     breakoutMax: number;
 
     strengthen: ComputedRef<Attributes>;
-    strengthenAdjust: Ref<Attributes>;
+    strengthenAdjust?: Ref<Attributes>;
     strengthenType: StrengthenType;
     strengthenMax?: Attributes;
 
@@ -51,17 +52,21 @@ export class Ship {
     constructor(
         public id: number
     ) {
-        this.breakoutMax = 0;
-        for (let i = id * 10 + 1; i !== 0; ) {
-            this.breakoutMax++;
-            i = ship_data_breakout[i].breakout_id;
-        }
-
         //等级
         this.level = ref(125);
 
         //好感
         this.favor = ref(4);
+
+        //最大可突破数
+        this.breakoutMax = 0;
+
+        const baseId = id * 10 + 1;
+        const data_breakout = (baseId in ship_meta_breakout) ? ship_meta_breakout : ship_data_breakout;
+        for (let i = baseId; i !== 0; ) {
+            this.breakoutMax++;
+            i = data_breakout[i].breakout_id;
+        }
 
         if (id in ship_data_blueprint) {
             //科研

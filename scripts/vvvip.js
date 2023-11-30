@@ -80,6 +80,12 @@ const vvvip = {
             "transform_list"
         ]
     },
+    ship_meta_breakout: {
+        folder: "ShareCfg",
+        props: [
+            "breakout_id"
+        ]
+    },
     ship_meta_repair_effect: {
         folder: "ShareCfg",
         props: [
