@@ -11,8 +11,8 @@
 
 <template>
     <a class="ship-transform-item" :class="{ disabled: !template.enable }" @click="onClick">
-        <nuxt-img class="transform-icon" :sizes="[28, 28]" :src="`/image/artresource/atlas/modicon/${template.icon}.png`"/>
-        <span>{{ template.name }}</span>
+        <nuxt-img class="transform-icon" :src="`/image/artresource/atlas/modicon/${template.icon}.png`"/>
+        <span class="transform-name">{{ template.name }}</span>
     </a>
 </template>
 
@@ -20,6 +20,7 @@
     .ship-transform-item {
         display: grid;
         justify-items: center;
+        overflow: hidden;
         height: 56px;
         padding-top: 4px;
         border: 1px solid var(--el-border-color);
@@ -32,5 +33,14 @@
                 opacity: 0.5;
             }
         }
+    }
+
+    .transform-icon {
+        width: 28px;
+    }
+
+    .transform-name {
+        overflow: hidden;
+        text-wrap: nowrap;
     }
 </style>

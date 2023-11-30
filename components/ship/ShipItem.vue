@@ -1,7 +1,7 @@
 <script setup>
     import favorTable from "~/data/constraint/favor";
     import fleetTable from "~/data/constraint/fleet";
-    import limitBreakTable from "~/data/constraint/limit-break";
+    import breakoutTable from "~/data/constraint/breakout";
 
     const props = defineProps({
         ship: Ship,
@@ -13,8 +13,7 @@
     const shipSelectorStore = useShipSelectorStore();
 
     const favorOptions = useConstraintOptions(favorTable);
-    const limitBreakOptions = useConstraintOptions(limitBreakTable);
-
+    const baseBreakoutOptions = useConstraintOptions(breakoutTable);
     const { backgroundStyle, frameStyle } = useRarityStyle(() => props.ship?.rarity);
 
     //头像链接
@@ -22,6 +21,11 @@
         return props.ship ?
             `/image/artresource/atlas/squareicon/${props.ship?.painting}.png` :
             `/image/artresource/ui/levelfleetselectview/blank_icon_light.png`;
+    });
+
+    //突破选项（根据最大可突破数）
+    const breakoutOptions = computed(() => {
+        return baseBreakoutOptions.slice(0, props.ship.breakoutMax);
     });
 
     //打开舰娘选择器
@@ -64,9 +68,9 @@
                         :min="1"
                         :max="125"
                     />
-                    <el-select v-model="ship.limitBreak">
+                    <el-select v-model="ship.breakout">
                         <el-option
-                            v-for="item in limitBreakOptions"
+                            v-for="item in breakoutOptions"
                             :key="item.value"
                             :value="item.value"
                             :label="item.label"

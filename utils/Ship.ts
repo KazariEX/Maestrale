@@ -2,6 +2,7 @@ import type { WritableComputedRef } from "vue";
 import { Equip } from "./Equip";
 import { SPWeapon } from "./SPWeapon";
 import ship_data_blueprint from "~/data/ShareCfg(VVVIP)/ship_data_blueprint.json";
+import ship_data_breakout from "~/data/ShareCfg(VVVIP)/ship_data_breakout.json";
 import ship_data_statistics from "~/data/ShareCfg(VVVIP)/ship_data_statistics.json";
 import ship_data_strengthen from "~/data/ShareCfg(VVVIP)/ship_data_strengthen.json";
 import ship_data_template from "~/data/ShareCfg(VVVIP)/ship_data_template.json";
@@ -22,7 +23,9 @@ export enum StrengthenType {
 export class Ship {
     level: Ref<number>;
     favor: Ref<number>;
-    limitBreak: Ref<number> | WritableComputedRef<number>;
+
+    breakout: Ref<number> | WritableComputedRef<number>;
+    breakoutMax: number;
 
     strengthen: ComputedRef<Attributes>;
     strengthenAdjust: Ref<Attributes>;
@@ -38,32 +41,21 @@ export class Ship {
 
     canTransform: boolean;
     transformTable?: Array<Array<number>>;
-    transformTemplate?: any;
-    isModernized?: Ref<false>;
+    transformTemplate?: Record<string, ShipTransformTemplate>;
+    isModernized: Ref<boolean>;
+    modernizedId?: Ref<number>;
 
     equips: Ref<Equip[]>;
     spweapon: Ref<SPWeapon>;
 
-    private data_statistics: any[];
-    private data_template: any[];
-    private skin_template: any;
-
     constructor(
         public id: number
     ) {
-        this.data_statistics = [
-            (ship_data_statistics as any)[id + "1"],
-            (ship_data_statistics as any)[id + "2"],
-            (ship_data_statistics as any)[id + "3"],
-            (ship_data_statistics as any)[id + "4"]
-        ];
-        this.data_template = [
-            (ship_data_template as any)[id + "1"],
-            (ship_data_template as any)[id + "2"],
-            (ship_data_template as any)[id + "3"],
-            (ship_data_template as any)[id + "4"]
-        ];
-        this.skin_template = (ship_skin_template as any)[id + "0"];
+        this.breakoutMax = 0;
+        for (let i = id * 10 + 1; i !== 0; ) {
+            this.breakoutMax++;
+            i = ship_data_breakout[i].breakout_id;
+        }
 
         //等级
         this.level = ref(125);
@@ -160,106 +152,109 @@ export class Ship {
             });
 
             //突破
-            this.limitBreak = computed({
+            this.breakout = computed({
                 get: () => {
                     const lv = this.blueprintLevel.value;
 
-                    if (lv < 10) return 0;
-                    else if (lv < 20) return 1;
-                    else if (lv < 30) return 2;
-                    else return 3;
+                    if (lv < 10) return 1;
+                    else if (lv < 20) return 2;
+                    else if (lv < 30) return 3;
+                    else return 4;
                 },
                 set: (value) => {
                     this.blueprintLevel.value = {
-                        0: 0,
-                        1: 10,
-                        2: 20,
-                        3: 30
+                        1: 0,
+                        2: 10,
+                        3: 20,
+                        4: 30
                     }[value] ?? 0;
                 }
             });
         }
-        else if (id in ship_strengthen_meta) {
-            //META
-            this.strengthenType = StrengthenType.meta;
+        else {
+            if (id in ship_strengthen_meta) {
+                //META
+                this.strengthenType = StrengthenType.meta;
 
-            //读取数据
-            const data_strengthen = ship_strengthen_meta[id];
-            const meta_repair_effect = data_strengthen.repair_effect.map(([per, key]) => {
-                return {
-                    per,
-                    ...ship_meta_repair_effect[key]
-                };
-            });
+                //读取数据
+                const data_strengthen = ship_strengthen_meta[id];
+                const meta_repair_effect = data_strengthen.repair_effect.map(([per, key]) => {
+                    return {
+                        per,
+                        ...ship_meta_repair_effect[key]
+                    };
+                });
 
-            //满强化值
-            this.strengthenMax = createAttributes();
-            for (const attr of ["cannon", "torpedo", "air", "reload"]) {
-                const repairList = data_strengthen[`repair_${attr}`];
+                //满强化值
+                this.strengthenMax = createAttributes();
+                for (const attr of ["cannon", "torpedo", "air", "reload"]) {
+                    const repairList = data_strengthen[`repair_${attr}`];
 
-                for (const key of repairList) {
-                    const [attr, value] = ship_meta_repair[key].effect_attr;
-                    this.strengthenMax[attr] += value;
+                    for (const key of repairList) {
+                        const [attr, value] = ship_meta_repair[key].effect_attr;
+                        this.strengthenMax[attr] += value;
+                    }
                 }
+
+                //可调节强化值
+                this.strengthenAdjust = ref({ ...this.strengthenMax });
+
+                //最终强化值
+                this.strengthen = computed(() => {
+                    const res = createAttributes(this.strengthenAdjust.value);
+
+                    let acc = 0;
+                    let total = 0;
+                    for (const attr in res) {
+                        acc += res[attr];
+                        total += this.strengthenMax[attr];
+                    }
+                    const rate = acc / total * 100;
+
+                    for (const effect of meta_repair_effect) {
+                        if (rate >= effect.per) {
+                            for (const [attr, value] of effect.effect_attr) {
+                                res[attr] += value;
+                            }
+                        }
+                        else break;
+                    }
+                    return res;
+                });
+            }
+            else {
+                //常规
+                this.strengthenType = StrengthenType.normal;
+
+                //读取数据
+                const data_strengthen = ship_data_strengthen[id];
+
+                //满强化值
+                this.strengthenMax = createAttributes({
+                    cannon: data_strengthen.durability[0],
+                    torpedo: data_strengthen.durability[1],
+                    air: data_strengthen.durability[3],
+                    reload: data_strengthen.durability[4]
+                });
+
+                //可调节强化值
+                this.strengthenAdjust = ref({ ...this.strengthenMax });
+
+                //最终强化值
+                this.strengthen = computed(() => this.strengthenAdjust.value);
             }
 
-            //可调节强化值
-            this.strengthenAdjust = ref({ ...this.strengthenMax });
-
-            //最终强化值
-            this.strengthen = computed(() => {
-                const res = createAttributes(this.strengthenAdjust.value);
-
-                let acc = 0;
-                let total = 0;
-                for (const attr in res) {
-                    acc += res[attr];
-                    total += this.strengthenMax[attr];
-                }
-                const rate = acc / total * 100;
-
-                for (const effect of meta_repair_effect) {
-                    if (rate >= effect.per) {
-                        for (const [attr, value] of effect.effect_attr) {
-                            res[attr] += value;
-                        }
-                    }
-                    else break;
-                }
-                return res;
-            });
-
             //突破
-            this.limitBreak = ref(3);
-        }
-        else {
-            //常规
-            this.strengthenType = StrengthenType.normal;
-
-            //读取数据
-            const data_strengthen = ship_data_strengthen[id];
-
-            //满强化值
-            this.strengthenMax = createAttributes({
-                cannon: data_strengthen.durability[0],
-                torpedo: data_strengthen.durability[1],
-                air: data_strengthen.durability[3],
-                reload: data_strengthen.durability[4]
-            });
-
-            //可调节强化值
-            this.strengthenAdjust = ref({ ...this.strengthenMax });
-
-            //最终强化值
-            this.strengthen = computed(() => this.strengthenAdjust.value);
-
-            //突破
-            this.limitBreak = ref(3);
+            this.breakout = ref(this.breakoutMax);
         }
 
-        if (id in ship_data_trans) {
-            //可改造
-            this.canTransform = true;
+        //改造
+        this.canTransform = id in ship_data_trans;
+        this.isModernized = ref(false);
+
+        //可改造
+        if (this.canTransform) {
+            this.modernizedId = ref(null);
 
             //读取数据
             this.transformTable = [];
@@ -279,12 +274,11 @@ export class Ship {
             }
 
             //添加后继节点
-            for (const key in this.transformTemplate) {
-                const temp = this.transformTemplate[key];
+            Object.entries(this.transformTemplate).forEach(([key, temp]) => {
                 for (const i of temp.condition_id) {
-                    this.transformTemplate[i].next_id.push(key);
+                    this.transformTemplate[i].next_id.push(Number(key));
                 }
-            }
+            });
 
             //链式监听
             for (const key in this.transformTemplate) {
@@ -300,12 +294,19 @@ export class Ship {
                             this.transformTemplate[i].enable.value = false;
                         }
                     }
+
+                    if (temp.name === "近代化改造") {
+                        this.isModernized.value = value;
+                    }
+
+                    const ship_id = temp.ship_id[0];
+                    if (ship_id?.length > 0) {
+                        this.modernizedId.value = ship_id[value ? 1 : 0];
+                    }
+                }, {
+                    immediate: true
                 });
             }
-        }
-        else {
-            //不可改造
-            this.canTransform = false;
         }
 
         //装备列表
@@ -315,22 +316,36 @@ export class Ship {
         this.spweapon = ref(null);
     }
 
-    //素材
-    get painting() {
-        return this.skin_template.painting;
+    private get curStat(): ShipDataStatistics {
+        return ship_data_statistics[this.curId.value];
     }
 
-    private get curStat() {
-        return this.data_statistics[this.limitBreak.value];
+    private get curTemp(): ShipDataTemplate {
+        return ship_data_template[this.curId.value];
     }
 
-    private get curTemp() {
-        return this.data_template[this.limitBreak.value];
+    private get curSkin(): ShipSkinTemplate {
+        return ship_skin_template[this.id * 10 + (this.isModernized.value ? 9 : 0)];
     }
+
+    //当前ID
+    private curId = computed(() => {
+        if (this.isModernized.value && this.modernizedId.value) {
+            return this.modernizedId.value;
+        }
+        else {
+            return this.id * 10 + this.breakout.value;
+        }
+    });
 
     //名称
     name = computed(() => {
-        return this.curStat.name;
+        const n = this.curStat.name;
+        if (this.isModernized.value) {
+            const suffix = ".改";
+            return n.replace(suffix, "") + suffix;
+        }
+        else return n;
     });
 
     //装甲类型
@@ -345,12 +360,17 @@ export class Ship {
 
     //稀有度
     rarity = computed(() => {
-        return this.curStat.rarity;
+        return this.curStat.rarity + (this.isModernized.value ? 1 : 0);
     });
 
     //舰种
     type = computed(() => {
         return this.curStat.type;
+    });
+
+    //素材
+    painting = computed(() => {
+        return this.curSkin.painting;
     });
 
     //可携带装备类型

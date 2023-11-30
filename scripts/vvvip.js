@@ -35,6 +35,12 @@ const vvvip = {
             "strengthen_effect"
         ]
     },
+    ship_data_breakout: {
+        folder: "sharecfgdata",
+        props: [
+            "breakout_id"
+        ]
+    },
     ship_data_statistics: {
         folder: "sharecfgdata",
         props: [
@@ -142,7 +148,8 @@ const vvvip = {
             "condition_id",
             "effect",
             "icon",
-            "name"
+            "name",
+            "ship_id"
         ]
     }
 };
