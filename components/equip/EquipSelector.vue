@@ -100,15 +100,15 @@
                         !temp.ship_type_forbidden.includes(equipSelectorStore.curShip.type) &&
                         (filter.rarity === 0 || (stat.rarity === 1 && filter.rarity === 2) || stat.rarity === filter.rarity) &&
                         (filter.type === 0 || stat.type === filter.type) &&
-                        (filter.nationality === 0 || stat.nationality === filter.nationality)
-                    " class="selector-item">
-                        <div :style="useRarityStyle(() => stat.rarity).backgroundStyle.value">
+                        (filter.nationality === 0 || stat.nationality === filter.nationality)"
+                        class="selector-item"
+                        :title="stat.name"
+                        @click="selectEquip(id)"
+                        ><div :style="useRarityStyle(() => stat.rarity).backgroundStyle.value">
                             <nuxt-img
-                                class="icon"
+                                class="selector-icon"
                                 loading="lazy"
                                 :src="`/image/artresource/atlas/equips/${stat.icon}.png`"
-                                :title="stat.name"
-                                @click="selectEquip(id)"
                             />
                         </div>
                         <span class="name">{{ stat.name }}</span>
@@ -120,7 +120,7 @@
 </template>
 
 <style lang="scss" scoped>
-    .selector-item .icon {
+    .selector-icon {
         margin: auto;
     }
 </style>

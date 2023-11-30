@@ -99,17 +99,17 @@
                         shipSelectorStore.curTypes.includes(item.type) &&
                         (filter.rarity === 0 || item.rarity === filter.rarity) &&
                         (filter.type === 0 || item.type === filter.type) &&
-                        (filter.nationality === 0 || item.nationality === filter.nationality)
-                    " class="selector-item">
-                        <div :style="useRarityStyle(() => item.rarity).backgroundStyle.value">
+                        (filter.nationality === 0 || item.nationality === filter.nationality)"
+                        class="selector-item"
+                        :title="item.name"
+                        @click="selectShip(id)"
+                        ><div :style="useRarityStyle(() => item.rarity).backgroundStyle.value">
                             <nuxt-img
-                                class="icon"
+                                class="selector-icon"
                                 loading="lazy"
                                 :src="`/image/artresource/atlas/squareicon/${
                                     ship_skin_template[id + `0`].painting
                                 }.png`"
-                                :title="item.name"
-                                @click="selectShip(id)"
                             />
                         </div>
                         <span class="name">{{ item.name }}</span>
@@ -165,14 +165,13 @@
         width: 64px;
         cursor: pointer;
 
+        &:hover {
+            color: var(--el-color-primary);
+        }
+
         > div {
             display: flex;
             height: 64px;
-        }
-
-        .icon {
-            max-width: 100%;
-            max-height: 100%;
         }
 
         .name {
@@ -182,5 +181,10 @@
             text-overflow: ellipsis;
             text-wrap: nowrap;
         }
+    }
+
+    .selector-icon {
+        max-width: 100%;
+        max-height: 100%;
     }
 </style>

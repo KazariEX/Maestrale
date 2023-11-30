@@ -67,15 +67,15 @@
                     <div v-show="
                         spweapon_type[stat.type].ship_type.includes(spweaponSelectorStore.curShip.type) &&
                         (stat.unique === 0 || stat.unique === spweaponSelectorStore.curShip.id) &&
-                        (filter.rarity === 0 || stat.rarity === filter.rarity)
-                    " class="selector-item">
-                        <div :style="useRarityStyle(() => stat.rarity + 1).backgroundStyle.value">
+                        (filter.rarity === 0 || stat.rarity === filter.rarity)"
+                        class="selector-item"
+                        :title="stat.name"
+                        @click="selectSpweapon(id)"
+                        ><div :style="useRarityStyle(() => stat.rarity + 1).backgroundStyle.value">
                             <nuxt-img
-                                class="icon"
+                                class="selector-icon"
                                 loading="lazy"
                                 :src="`/image/artresource/atlas/spweapon/${stat.icon}.png`"
-                                :title="stat.name"
-                                @click="selectSpweapon(id)"
                             />
                         </div>
                         <span class="name">{{ stat.name }}</span>
@@ -87,7 +87,7 @@
 </template>
 
 <style lang="scss" scoped>
-    .selector-item .icon {
+    .selector-icon {
         margin: auto;
     }
 </style>
