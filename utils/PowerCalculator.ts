@@ -8,13 +8,13 @@ export class PowerCalculator {
     //合计属性战力
     private attrsPower = computed(() => {
         const attrs = createAttributes();
-        const technologyStore = useTechnologyStore();
 
-        for (const attr in attrs) {
-            attrs[attr] =
-                Math.floor(this.ship[attr].value) +
-                this.ship.equipAttrs.value[attr] +
-                technologyStore.get(this.ship.type.value, attr);
+        for (const key in attrs) {
+            const baseAttr = Math.floor(this.ship[key].value);
+            const equipAttr = this.ship.equipAttrs.value[key];
+            const techAttr = this.ship.techAttrs.value[key];
+
+            attrs[key] = baseAttr + equipAttr + techAttr;
         }
 
         return (

@@ -8,7 +8,6 @@
     });
 
     const fleetStore = useFleetStore();
-    const technologyStore = useTechnologyStore();
     const ship = storeToRefs(fleetStore).curShip;
 
     //基础白值
@@ -23,7 +22,7 @@
 
     //科技属性值
     const techValue = computed(() => {
-        return technologyStore.get(ship.value?.type, props.attrName);
+        return ship.value?.techAttrs?.[props.attrName];
     });
 </script>
 

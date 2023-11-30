@@ -410,6 +410,19 @@ export class Ship {
         return attrs;
     });
 
+    //获取科技总属性
+    techAttrs = computed(() => {
+        const attrs = createAttributes();
+        const technologyStore = useTechnologyStore();
+
+        if (this.breakout.value === this.breakoutMax) {
+            for (const key in attrs) {
+                attrs[key] += technologyStore.get(this.type.value, key);
+            }
+        }
+        return attrs;
+    });
+
     //耐久
     durability = computed(() => {
         return this.getAttr(0, "durability");
