@@ -9,10 +9,10 @@
             <p>代码仓库：<nuxt-link to="https://github.com/KazariEX/Maestrale" target="_blank">Maestrale</nuxt-link></p>
         </HelpSection>
         <HelpSection title="特性">
-            <p>为了保证代码的简洁和可维护性，本工具将暂时不在舰船的<mark>等级</mark>、<mark>突破等级</mark>和<mark>改造进度</mark>这三个参数之间做任何相互的约束，因此请自行调整以符合实际情况。</p>
+            <p>为了保证代码的简洁和可维护性，本工具将暂时不在舰船的<mark>等级</mark>、<mark>突破等级</mark>和<mark>改造进度</mark>这三个参数之间做任何相互的约束；同时，可携带装备种类也可能因突破等级和舰种的变化而产生差异，请自行调整以符合实际情况。</p>
         </HelpSection>
         <div class="help-footer">
-            <p>©️ 2023-2023 By <nuxt-link to="https://github.com/KazariEX" target="_blank">KazariEX</nuxt-link></p>
+            <p>Copyright ©️ 2023-2024 By <nuxt-link to="https://github.com/KazariEX" target="_blank">KazariEX</nuxt-link></p>
         </div>
     </div>
 </template>

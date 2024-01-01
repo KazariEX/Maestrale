@@ -23,8 +23,6 @@
 
     @media (width < 1024px) {
         .mae-main {
-            --pd: 0.5em;
-
             padding-inline: 0.5em;
         }
     }

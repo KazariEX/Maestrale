@@ -1,26 +1,18 @@
 <script setup>
     const fleetStore = useFleetStore();
 
-    fleetStore.main = [
-        null,
-        createShip(60501),
-        null
-    ];
-
-    fleetStore.vanguard = [
-        createShip(60104, {
-            equips: [
-                85040,
-                0,
-                0,
-                0,
-                2640
-            ],
-            spweapon: 1010220
-        }),
-        createShip(60105),
-        null
-    ];
+    fleetStore.$patch({
+        main: [
+            null,
+            createShip(60501),
+            null
+        ],
+        vanguard: [
+            createShip(60104),
+            createShip(60105),
+            null
+        ]
+    });
 
     fleetStore.curShip = fleetStore.vanguard[0];
 </script>
